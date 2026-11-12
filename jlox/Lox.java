@@ -14,6 +14,7 @@ public class Lox {
     public static void main(String[] args) throws IOException {
         if (args.length > 1) {
             System.out.println("Usage: jlox [script]");
+            // code 64 - command line usage error
             System.exit(64);
         } else if (args.length == 1) {
             runFile(args[0]);
@@ -28,6 +29,7 @@ public class Lox {
         // decodes the array of bytes into text, then runs it
         run(new String(bytes, Charset.defaultCharset()));
 
+        // code 65 - input was bad
         if (hadError) System.exit(65);
     }
 
