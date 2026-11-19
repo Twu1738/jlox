@@ -83,6 +83,11 @@ public class Scanner {
                 if (match('/')) {
                     // a comment goes until the end of the line
                     while (peek() != '\n' && !isAtEnd()) advance();
+                } 
+                // challenge for chapter 4 - scanning 
+                // adding support for c-style comments i.e. /* ... */
+                else if (match('*')) {
+                    blockComment();
                 } else {
                     addToken(SLASH);
                 }
@@ -153,6 +158,26 @@ public class Scanner {
         // trims the surrounding quotes
         String value = source.substring(start + 1, current - 1);
         addToken(STRING, value);
+    }
+
+    private void blockComment() {
+        while ((peek() != '*' || peekNext() != '/') && !isAtEnd()) {
+            if (peek() == '\n') {
+                line += 1;
+                
+            } 
+            advance();
+        }
+        // the loop stops before the closing tags, so if we reach
+        // the end of the file, it means that it was never closed
+        if (isAtEnd()) {
+            Lox.error(line, "Unterminated comment");
+            return;
+        }
+
+        // moves past the closing tags - "*/"
+        advance();
+        advance();
     }
 
     private boolean match(char expected) {
